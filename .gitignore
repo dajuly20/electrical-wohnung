@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+
+# Output (kann regeneriert werden)
+# Aber wir commiten es trotzdem für Versionshistorie
+# output/
+# docs/
+
+# Temporäre Dateien
+*.tmp
+*.bak
+*~
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Persönliche Notizen
+notes/
+todo.txt

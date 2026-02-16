@@ -1,0 +1,121 @@
+# Elektrische Installation - Wohnung Julian
+# Datum: 2026-02-16
+
+installation:
+  location: "Ludwigshafen am Rhein"
+  date_documented: "2026-02-16"
+  
+main_components:
+  meter:
+    type: "Stromzähler"
+    phases: ["L1", "L2", "L3"]
+    neutral: "N"
+    
+  main_breaker:
+    type: "Diazed"
+    rating: "63A"
+    phases: 3
+    
+  rcd:
+    type: "FI-Schalter"
+    rating: "30mA"
+    # type: "TBD"  # Typ A/B noch zu bestimmen
+    
+  energy_monitor:
+    model: "Shelly Pro3EM"
+    firmware: "1.7.4"
+    device_id: "34987A681408"
+    connection:
+      - phase: "L1"
+        color: "Schwarz"
+        wire_size: "10mm²"
+      - phase: "L2"
+        color: "Braun"
+        wire_size: "10mm²"
+      - phase: "L3"
+        color: "Blau"
+        wire_size: "10mm²"
+
+breakers:
+  F1:
+    type: "B16"
+    phase: "TBD"
+    rooms: []
+    
+  F2:
+    type: "B16"
+    phase: "TBD"
+    rooms: []
+    
+  F3:
+    type: "B16"
+    phase: "TBD"
+    rooms: []
+    
+  F4:
+    type: "B16"
+    phase: "TBD"
+    rooms: []
+    
+  F5:
+    type: "B16"
+    phase: "TBD"
+    rooms: []
+    
+  F6:
+    type: "B16"
+    phase: "TBD"
+    rooms: []
+    
+  F7:
+    type: "B16"
+    phase: "L2"
+    color: "Braun"
+    rooms: ["Julians Zimmer", "Balkon groß"]
+    loads:
+      - name: "Fernseher"
+        power_w: 438  # aktuell gemessen
+        
+# Phasenverteilung (wird durch Wasserkocher-Test ermittelt)
+phase_distribution:
+  L1:
+    color: "Schwarz"
+    current_load_w: 36
+    loads: []
+    
+  L2:
+    color: "Braun"
+    current_load_w: 438
+    loads:
+      - room: "Julians Zimmer"
+        breaker: "F7"
+      - room: "Balkon groß"
+        breaker: "F7"
+      - device: "Fernseher"
+        power_w: 438
+        
+  L3:
+    color: "Blau"
+    current_load_w: 0
+    loads:
+      - device: "Herd - hintere Kochplatten"
+        power_w: 0  # aktuell nicht in Betrieb
+      - device: "Geschirrspüler"
+        power_w: 0  # teilweise
+        note: "Teilphase"
+
+# Drehstrom-Verbraucher
+three_phase_loads:
+  herd:
+    type: "Herd mit Backofen"
+    phases:
+      rear_plates: "L3"  # bestätigt
+      front_plates: "TBD"
+      oven: "TBD"
+      
+# Notizen
+notes:
+  - "Phase sequence error am Shelly - Reihenfolge nicht L1-L2-L3"
+  - "Keine Drehstrom-Motoren vorhanden, nur einphasige Lasten"
+  - "Wasserkocher-Test läuft zur Raumzuordnung"
+  - "FI-Typ noch zu bestimmen"

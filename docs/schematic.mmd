@@ -1,0 +1,17 @@
+```mermaid
+graph TB
+    Zaehler[Stromzähler<br/>3-Phasen]
+    Haupt[Hauptsicherung<br/>Diazed 63A]
+    FI[FI-Schutzschalter<br/>30mA]
+    Shelly[Shelly Pro3EM<br/>Energiemonitor]
+
+    Zaehler --> Haupt
+    Haupt --> FI
+    FI --> Shelly
+
+    Shelly -->|L1 Schwarz| L1[L1<br/>Schwarz<br/>36W]
+    Shelly -->|L2 Braun| L2[L2<br/>Braun<br/>438W]
+    Shelly -->|L3 Blau| L3[L3<br/>Blau<br/>0W]
+
+    L2 --> F7[F7<br/>B16<br/>Julians Zimmer<br/>Balkon groß]
+```

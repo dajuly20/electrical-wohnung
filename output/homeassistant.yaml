@@ -1,0 +1,53 @@
+# Home Assistant - Shelly Pro3EM Integration
+# Kopiere in configuration.yaml oder packages/electrical.yaml
+
+sensor:
+  - platform: mqtt
+    name: "Energie L1"
+    state_topic: "shellypro3em-34987A681408/status/em:0"
+    value_template: "{{ value_json.a_act_power }}"
+    unit_of_measurement: "W"
+    device_class: power
+
+  - platform: mqtt
+    name: "Energie L2"
+    state_topic: "shellypro3em-34987A681408/status/em:0"
+    value_template: "{{ value_json.a_act_power }}"
+    unit_of_measurement: "W"
+    device_class: power
+
+  - platform: mqtt
+    name: "Energie L3"
+    state_topic: "shellypro3em-34987A681408/status/em:0"
+    value_template: "{{ value_json.a_act_power }}"
+    unit_of_measurement: "W"
+    device_class: power
+
+  # Gesamtverbrauch
+  - platform: template
+    sensors:
+      total_power:
+        friendly_name: "Gesamtverbrauch"
+        unit_of_measurement: "W"
+        value_template: >
+          {{ states('sensor.energie_l1')|float +
+             states('sensor.energie_l2')|float +
+             states('sensor.energie_l3')|float }}
+
+      # Kosten (Beispiel: 0.30 EUR/kWh)
+      power_cost_hourly:
+        friendly_name: "Stromkosten pro Stunde"
+        unit_of_measurement: "EUR/h"
+        value_template: >
+          {{ (states('sensor.total_power')|float / 1000 * 0.30)|round(2) }}
+
+automation:
+  - alias: "Warnung bei hoher Last"
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.total_power
+        above: 3000
+    action:
+      - service: notify.notify
+        data:
+          message: "Hoher Stromverbrauch: {{ states('sensor.total_power') }}W"
