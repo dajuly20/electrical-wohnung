@@ -1,30 +1,43 @@
 # Elektrische Installation - Wohnung Julian
 # Datum: 2026-02-16
+# Status: Nur 100% gesicherte Daten, Unsicheres explizit markiert
 
 installation:
   location: "Ludwigshafen am Rhein"
   date_documented: "2026-02-16"
-  
+
 main_components:
   meter:
-    type: "Stromzähler"
+    manufacturer: "Itron"
+    type: "Drehstromzähler"
+    connection: "3x230/400V"
+    rated_current: "10(60)A"
+    provider: "badenova"
+    reading_kwh: 3830981
     phases: ["L1", "L2", "L3"]
     neutral: "N"
-    
+
   main_breaker:
     type: "Diazed"
     rating: "63A"
     phases: 3
-    
+    note: "3 Schraubsicherungen"
+
   rcd:
-    type: "FI-Schalter"
-    rating: "30mA"
-    # type: "TBD"  # Typ A/B noch zu bestimmen
-    
+    model: "Eaton PXF-40/4/003-A"
+    rated_current: "40A"
+    residual_current: "30mA"
+    type: "A"  # Wechsel- und pulsierende Gleichfehlerströme
+
   energy_monitor:
     model: "Shelly Pro3EM"
     firmware: "1.7.4"
     device_id: "34987A681408"
+    subdistribution: "UV 0.2"
+    own_breakers:
+      - model: "Hager MBS 116"
+        rating: "B16"
+        quantity: 3
     connection:
       - phase: "L1"
         color: "Schwarz"
@@ -36,73 +49,96 @@ main_components:
         color: "Blau"
         wire_size: "10mm²"
 
+# Alle Sicherungen: Eaton PXL B16/1 (einpolig)
 breakers:
   F1:
+    model: "Eaton PXL B16/1"
     type: "B16"
     phase: "TBD"
     rooms: []
-    
+
   F2:
+    model: "Eaton PXL B16/1"
     type: "B16"
     phase: "TBD"
     rooms: []
-    
+
   F3:
+    model: "Eaton PXL B16/1"
     type: "B16"
     phase: "TBD"
     rooms: []
-    
+
   F4:
+    model: "Eaton PXL B16/1"
     type: "B16"
     phase: "TBD"
     rooms: []
-    
+
   F5:
+    model: "Eaton PXL B16/1"
     type: "B16"
     phase: "TBD"
     rooms: []
-    
+
   F6:
+    model: "Eaton PXL B16/1"
     type: "B16"
     phase: "TBD"
     rooms: []
-    
+
   F7:
+    model: "Eaton PXL B16/1"
     type: "B16"
-    phase: "L2"
-    color: "Braun"
-    rooms: ["Julians Zimmer", "Balkon groß"]
-    loads:
-      - name: "Fernseher"
-        power_w: 438  # aktuell gemessen
-        
-# Phasenverteilung (wird durch Wasserkocher-Test ermittelt)
+    phase: "TBD"
+    rooms: []
+
+# Shelly-Messwerte (Snapshot)
+measurements:
+  timestamp: "2026-02-16T03:15"
+  phase_a:
+    wire_color: "Schwarz"
+    mapped_phase: "L1"
+    power_w: 36
+    current_a: 0.376
+    voltage_v: 238.0
+    power_factor: 0.41
+  phase_b:
+    wire_color: "Braun"
+    mapped_phase: "L2"
+    power_w: 438
+    current_a: 2.3
+    voltage_v: 236.8
+    power_factor: 0.81
+  phase_c:
+    wire_color: "Blau"
+    mapped_phase: "L3"
+    power_w: 0
+    current_a: 0.032
+    voltage_v: 237.1
+    power_factor: 0
+
+# Gesicherte Phasenzuordnungen
 phase_distribution:
   L1:
     color: "Schwarz"
     current_load_w: 36
-    loads: []
-    
+    confirmed_loads: []
+
   L2:
     color: "Braun"
     current_load_w: 438
-    loads:
-      - room: "Julians Zimmer"
-        breaker: "F7"
-      - room: "Balkon groß"
-        breaker: "F7"
-      - device: "Fernseher"
-        power_w: 438
-        
+    confirmed_loads: []
+
   L3:
     color: "Blau"
     current_load_w: 0
-    loads:
+    confirmed_loads:
       - device: "Herd - hintere Kochplatten"
-        power_w: 0  # aktuell nicht in Betrieb
+        status: "bestätigt"
       - device: "Geschirrspüler"
-        power_w: 0  # teilweise
-        note: "Teilphase"
+        status: "bestätigt"
+        note: "Teilphase - läuft teilweise auf L3"
 
 # Drehstrom-Verbraucher
 three_phase_loads:
@@ -112,10 +148,15 @@ three_phase_loads:
       rear_plates: "L3"  # bestätigt
       front_plates: "TBD"
       oven: "TBD"
-      
-# Notizen
+
+# === NOCH ZU KLÄREN ===
+open_items:
+  - "Sicherung F1-F7: Raum-Zuordnung unbekannt"
+  - "Handschriftliche Sicherungsliste stimmt nicht mit Wasserkocher-Test überein"
+  - "Julians Zimmer: welche Sicherung?"
+  - "Herd: vordere Platten + Backofen auf welcher Phase?"
+  - "F7-Zuordnung widersprüchlich - User sagt L2/Julians Zimmer, passt aber nicht zu Messwerten"
+
 notes:
   - "Phase sequence error am Shelly - Reihenfolge nicht L1-L2-L3"
   - "Keine Drehstrom-Motoren vorhanden, nur einphasige Lasten"
-  - "Wasserkocher-Test läuft zur Raumzuordnung"
-  - "FI-Typ noch zu bestimmen"
